@@ -1,0 +1,2 @@
+1. adjust product card make it responsive for only mobile 
+2. 

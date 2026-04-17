@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .asdfghj{
+        
+        align-items: center;
+        margin-left: 100px;
+        width: 170px;
+    }
+    .pqpqppq{
+        color: red;
+        font-size: small;
+    }
+    .orderok{
+        color: rgb(83, 83, 83);
+        font-size: large;
+        align-items: center ;
+        
+    }
+    .btn8{
+        background-color: #FB641B;
+       
+  width: 120px;
+  height: 45px;
+  justify-content: flex-end;
+  margin-top: 14px;
+  margin-right: 8px;
+  padding-bottom: 10px;
+    }
+</style>
+<body>
+    <div class="asdfghj">
+     <p class="orderok"> YOUR ORDER HAS
+        BEEN RECEIVED</p>  
+Thank you for your payment,
+<br>it’s processing <br><br>
+<p class="pqpqppq">  If your payment is not successful by you, then
+your order will be canclled automatically! Please
+make sure do not close any upi app untill payment is
+done!</p> <br><br>
+You will receive an order
+confirmation message with details of
+your order and a link to track your
+process.
+Your Order id is <p id="id">7865801942</p> <br><br>
+<a href="/">
+<button class="btn8">CONTINUE  </button>
+</a>
+
+
+    </div>
+    <script>
+        var id=document.getElementById('id')
+        var ran=Math.floor(Math.random()*8529059999+9015015)
+        id.innerHTML=ran
+    </script>
+</body>
+</html>
