@@ -7,7 +7,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Flipkart Admin | Professional Dashboard</title>
+    <title>Flipkart Admin</title>
     <!-- Bootstrap 5 + Icons + Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -268,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_password'])) {
 }
 if (isset($_POST['logout'])) {
     session_destroy();
-    header('Location: admin.php'); exit;
+    echo "<script>window.location='admin.php';</script>";
 }
 $authed = !empty($_SESSION['admin_auth']);
 
@@ -303,6 +303,13 @@ if ($authed && $_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_POST['upi_id'])) $stmt->execute(['upi_id', trim($_POST['upi_id'])]);
         if (!empty($_POST['merchant_name'])) $stmt->execute(['merchant_name', trim($_POST['merchant_name'])]);
         $flash = 'success:UPI settings updated!';
+    } elseif ($act === 'update_payment_settings') {
+        $stmt = $db->prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)");
+        $stmt->execute(['razorpay_key_id',     trim($_POST['razorpay_key_id']     ?? '')]);
+        $stmt->execute(['razorpay_key_secret', trim($_POST['razorpay_key_secret'] ?? '')]);
+        $stmt->execute(['cod_advance_type',    trim($_POST['cod_advance_type']    ?? 'percent')]);
+        $stmt->execute(['cod_advance_value',   trim($_POST['cod_advance_value']   ?? '0')]);
+        $flash = 'success:Payment settings saved!';
     } elseif ($act === 'change_password') {
         $cur = trim($_POST['current_password'] ?? '');
         $new = trim($_POST['new_password'] ?? '');
@@ -352,7 +359,6 @@ function flashParts(string $f): array { return explode(':', $f, 2); }
                         <div class="alert alert-danger mt-3 py-2 small rounded-pill text-center"><?= esc($loginError) ?></div>
                     <?php endif; ?>
                 </form>
-                <div class="text-center mt-4 small text-secondary">Default: <code class="bg-light px-2 rounded">admin123</code></div>
             </div>
         </div>
     </div>
@@ -373,6 +379,7 @@ function flashParts(string $f): array { return explode(':', $f, 2); }
             <a href="?tab=products" class="nav-link-custom d-flex align-items-center <?= $tab==='products'?'active':'' ?>"><i class="bi bi-grid-3x3-gap-fill"></i> Products</a>
             <a href="?tab=add" class="nav-link-custom d-flex align-items-center <?= $tab==='add'?'active':'' ?>"><i class="bi bi-plus-circle"></i> Add Product</a>
             <a href="?tab=upi" class="nav-link-custom d-flex align-items-center <?= $tab==='upi'?'active':'' ?>"><i class="bi bi-credit-card"></i> UPI Settings</a>
+            <a href="?tab=payment" class="nav-link-custom d-flex align-items-center <?= $tab==='payment'?'active':'' ?>"><i class="bi bi-lightning-charge"></i> Payment Settings</a>
             <a href="?tab=password" class="nav-link-custom d-flex align-items-center <?= $tab==='password'?'active':'' ?>"><i class="bi bi-lock"></i> Change Password</a>
             <a href="?tab=deleted" class="nav-link-custom d-flex align-items-center <?= $tab==='deleted'?'active':'' ?>"><i class="bi bi-trash3"></i> Deleted Products</a>
         </nav>
@@ -390,7 +397,7 @@ function flashParts(string $f): array { return explode(':', $f, 2); }
             <div class="d-flex align-items-center gap-3">
                 <button class="btn d-lg-none p-0 border-0 fs-4" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
                 <h5 class="mb-0 fw-semibold text-dark">
-                    <?php $tabNames = ['dashboard'=>'Dashboard','products'=>'Product Management','add'=>'Create Product','upi'=>'UPI Configuration','password'=>'Security','deleted'=>'Archived Items']; echo esc($tabNames[$tab] ?? 'Admin'); ?>
+                    <?php $tabNames = ['dashboard'=>'Dashboard','products'=>'Product Management','add'=>'Create Product','upi'=>'UPI Configuration','payment'=>'Payment Settings','password'=>'Security','deleted'=>'Archived Items']; echo esc($tabNames[$tab] ?? 'Admin'); ?>
                 </h5>
             </div>
             <div>
@@ -471,6 +478,80 @@ function flashParts(string $f): array { return explode(':', $f, 2); }
             <?php if ($tab === 'upi'): ?>
             <div class="row g-4"><div class="col-md-6"><div class="card-pro card"><div class="card-header-clean">Current UPI Info</div><div class="card-body"><i class="bi bi-phone"></i> <strong>UPI ID:</strong> <?= esc($settings['upi_id'] ?? '—') ?><br><i class="bi bi-person-badge"></i> <strong>Merchant:</strong> <?= esc($settings['merchant_name'] ?? '—') ?></div></div></div><div class="col-md-6"><div class="card-pro card"><div class="card-header-clean">Update UPI Settings</div><div class="card-body"><form method="POST"><input type="hidden" name="_action" value="update_upi"><div class="mb-3"><label>UPI ID</label><input class="form-control" name="upi_id" value="<?= esc($settings['upi_id'] ?? '') ?>" placeholder="example@okhdfcbank"></div><div class="mb-3"><label>Merchant Name</label><input class="form-control" name="merchant_name" value="<?= esc($settings['merchant_name'] ?? '') ?>" placeholder="Store Name"></div><button class="btn btn-flipkart text-white rounded-pill"><i class="bi bi-save"></i> Save UPI Config</button></form></div></div></div></div>
             <div class="card-pro card mt-4"><div class="card-header-clean">Payment Deep Link Preview</div><div class="card-body"><?php $uid=$settings['upi_id']??'your@upi'; $mname=urlencode($settings['merchant_name']??'Store'); $links=['GPay'=>"tez://upi/pay?pa=$uid&pn=$mname&tn=Order&am={amount}&cu=INR",'PhonePe'=>"phonepe://pay?pa=$uid&pn=$mname&tn=Order&am={amount}&cu=INR",'Paytm'=>"paytmmp://pay?pa=$uid&pn=$mname&tn=Order&am={amount}&cu=INR",'UPI'=>"upi://pay?pa=$uid&pn=$mname&tn=Order&am={amount}&cu=INR"]; foreach($links as $app=>$url){ echo "<div class='mb-3'><span class='badge bg-dark me-2'>$app</span><code class='code-block d-block'>".esc($url)."</code></div>"; } ?></div></div>
+            <?php endif; ?>
+
+
+            <!-- PAYMENT SETTINGS -->
+            <?php if ($tab === 'payment'): ?>
+            <div class="row g-4">
+                <!-- COD Advance Settings -->
+                <div class="col-12">
+                    <div class="card-pro card">
+                        <div class="card-header-clean"><i class="bi bi-truck me-2 text-warning"></i>Cash on Delivery — Advance Payment Settings</div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">When a customer selects COD, a popup asks them to pay an advance via UPI. Configure the advance amount below.</p>
+                            <form method="POST">
+                                <input type="hidden" name="_action" value="update_payment_settings">
+                                <!-- Pass empty razorpay fields so handler doesn't break -->
+                                <input type="hidden" name="razorpay_key_id" value="<?= esc($settings['razorpay_key_id'] ?? '') ?>">
+                                <input type="hidden" name="razorpay_key_secret" value="<?= esc($settings['razorpay_key_secret'] ?? '') ?>">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Advance Type</label>
+                                        <select class="form-select" name="cod_advance_type">
+                                            <option value="percent" <?= ($settings['cod_advance_type'] ?? 'percent') === 'percent' ? 'selected' : '' ?>>Percentage (%) of order</option>
+                                            <option value="fixed"   <?= ($settings['cod_advance_type'] ?? '') === 'fixed'   ? 'selected' : '' ?>>Fixed Amount (₹)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Advance Value</label>
+                                        <input type="number" min="0" class="form-control" name="cod_advance_value"
+                                               value="<?= esc($settings['cod_advance_value'] ?? '20') ?>"
+                                               placeholder="e.g. 20 for 20% or ₹200">
+                                        <div class="form-text">Enter 20 for 20% or enter ₹ amount if fixed.</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <div class="alert alert-success w-100 py-2 small mb-0">
+                                            <strong>Current:</strong> <?php
+                                            $advType = $settings['cod_advance_type'] ?? 'percent';
+                                            $advVal  = $settings['cod_advance_value'] ?? '20';
+                                            if ($advType === 'percent') echo "Customer pays {$advVal}% advance via UPI on COD.";
+                                            else echo "Customer pays ₹{$advVal} advance via UPI on COD.";
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-flipkart text-white rounded-pill px-4"><i class="bi bi-save me-1"></i>Save COD Settings</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- UPI Deeplink Preview -->
+                <div class="col-12">
+                    <div class="card-pro card">
+                        <div class="card-header-clean"><i class="bi bi-link-45deg me-2 text-primary"></i>UPI Deep Link Preview (sample amount: ₹499)</div>
+                        <div class="card-body pb-4">
+                            <?php
+                            $uid   = $settings['upi_id']       ?? 'your@upi';
+                            $mname = urlencode($settings['merchant_name'] ?? 'Store');
+                            $tr    = 'TXN' . time();
+                            $am    = '499.00';
+                            $links = [
+                                'GPay'    => "tez://upi/pay?pa={$uid}&pn={$mname}&tn=OrderPayment&tr={$tr}&mc=5945&am={$am}&cu=INR&mode=02",
+                                'PhonePe' => "phonepe://pay?pa={$uid}&pn={$mname}&tn=OrderPayment&tr={$tr}&mc=5945&am={$am}&cu=INR&mode=02",
+                                'Paytm'   => "paytmmp://pay?pa={$uid}&pn={$mname}&tn=OrderPayment&tr={$tr}&mc=5945&am={$am}&cu=INR&mode=02",
+                                'UPI All' => "upi://pay?pa={$uid}&pn={$mname}&tn=OrderPayment&tr={$tr}&mc=5945&am={$am}&cu=INR&mode=19",
+                            ];
+                            foreach ($links as $app => $url) {
+                                echo "<div class='mb-3'><span class='badge bg-dark me-2'>{$app}</span><code class='code-block d-block'>" . esc($url) . "</code></div>";
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <?php endif; ?>
 
             <!-- PASSWORD -->
