@@ -44,7 +44,7 @@ function initDB(PDO $pdo): void {
 
     // Seed default UPI settings if not set
     $stmt = $pdo->prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)");
-    $stmt->execute(['upi_id',        'merchant1069004.augp@aubank']);
+    $stmt->execute(['upi_id',        '-upi-']);
     $stmt->execute(['merchant_name', 'MeeraTraders']);
     $stmt->execute(['admin_password','admin123']);
 
